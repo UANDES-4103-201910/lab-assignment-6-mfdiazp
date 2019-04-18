@@ -25,13 +25,30 @@ class UsersController < ApplicationController
   # POST /users
   # POST /users.json
   def create
-    #complete this method
+    new_user = User.new(user_params)
+    if new_user.save
+      flash[:notice] = "User created successfully"
+      redirect_to "/users/new"
+    else
+      error_message = ""
+      new_user.errors.full_messages.each do |message|
+        error_message += message + ". "
+      end
+      flash[:notice] = "User creation failed: " + error_message
+      redirect_to "/users/new"
+    end
   end
 
   # PATCH/PUT /users/1
   # PATCH/PUT /users/1.json
   def update
-    #complete this method
+    if @user.update(user_params)
+      flash[:notice] = "User updated successfully"
+      redirect_to "/users/" + @user.id.to_s
+    else
+      flash[:notice] = "User update failed"
+      redirect_to "/users/" + @user.id.to_s
+    end
   end
 
   # DELETE /users/1
